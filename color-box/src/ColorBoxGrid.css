@@ -1,0 +1,8 @@
+.ColorBoxGrid {
+    display: grid;
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+    width: min(90vw, 500px);
+    aspect-ratio: 1;
+    gap: 8px;
+    margin: 32px auto;
+}

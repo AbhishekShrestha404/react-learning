@@ -1,0 +1,7 @@
+.PropertyList {
+
+    display: flex;
+    border: 2px solid black;
+    margin-top: 300px;
+    padding-top: 40px;
+}

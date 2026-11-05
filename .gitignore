@@ -1,0 +1,13 @@
+# Keep this project separate
+toggleDemonstration/
+
+# Dependencies
+node_modules/
+
+# Build output
+dist/
+
+# Environment and system files
+.env
+.env.*
+.DS_Store
