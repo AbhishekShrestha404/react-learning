@@ -15,6 +15,17 @@ function Form() {
 
     const handleData = (evt) => {
         const { name, value, type, files } = evt.target;
+
+        if (type === "file") {
+            const file = files[0];
+
+            if (file && file.size > 2 * 1024 * 1024) {
+                alert("File must be less than 2MB");
+                evt.target.value = "";
+                return;
+            }
+        }
+
         setFormData(currentData => ({
             ...currentData,
             [name]: type === "file" ? files[0] ?? null : value
