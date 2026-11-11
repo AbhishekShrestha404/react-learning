@@ -2,6 +2,7 @@
 import { useState } from 'react';
 import List from '@mui/material/List';
 import TodoItem from './TodoItem';
+import TodoForm from './TodoForm';
 
 const initialTodos = [
     { id: 1, text: "walk the dog", completed: false },
@@ -25,8 +26,14 @@ function TodoList() {
 
     const removeTodo = (id) => {
         setTodos(previousTodos => {
-            return previousTodos.filter(t => t.id !== id)
+            return previousTodos.filter(t => t.id !== id);
         })
+    }
+
+    const createTodo = (text) => {
+        setTodos(previousTodos => {
+            return [...previousTodos, { text: text, id: crypto.randomUUID(), completed: false }]
+        });
     }
 
     return (
@@ -39,9 +46,14 @@ function TodoList() {
                 }}
             >
                 {todos.map((todo) => (
-                    <TodoItem todo={todo} key={todo.id} removeTodo={() => removeTodo(todo.id)} />
+                    <TodoItem todo={todo}
+                        key={todo.id}
+                        handleToggle={handleToggle}
+                        removeTodo={() => removeTodo(todo.id)}
+                    />
 
                 ))}
+                <TodoForm createTodo={createTodo} />
             </List>
         </div>
     );
