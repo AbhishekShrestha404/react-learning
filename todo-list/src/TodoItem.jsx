@@ -5,7 +5,7 @@ import ListItemText from '@mui/material/ListItemText';
 import IconButton from '@mui/material/IconButton';
 import CheckBoxIcon from '@mui/icons-material/CheckBox';
 import CheckBoxOutlineBlankIcon from '@mui/icons-material/CheckBoxOutlineBlank';
-import CommentIcon from '@mui/icons-material/Comment';
+import Delete from '@mui/icons-material/Delete';
 
 function TodoItem({ todo, handleToggle, removeTodo }) {
     const labelId = `checkbox-list-label-${todo.id}`;
@@ -19,10 +19,11 @@ function TodoItem({ todo, handleToggle, removeTodo }) {
             secondaryAction={
                 <IconButton
                     edge="end"
-                    aria-label={`see comments for ${todo.text}`}
+                    aria-label='delete'
                     onClick={removeTodo}
+                    color='error'
                 >
-                    <CommentIcon />
+                    <Delete />
                 </IconButton>
             }
             disablePadding
