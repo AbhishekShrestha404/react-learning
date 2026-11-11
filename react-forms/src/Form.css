@@ -1,5 +1,3 @@
-/* Form.css */
-
 * {
     box-sizing: border-box;
 }
@@ -210,4 +208,10 @@ form button[type="submit"]:active {
     .gender-row {
         flex-wrap: wrap;
     }
+}
+
+.error {
+    color: red;
+    font-size: 12px;
+    margin-top: 5px;
 }

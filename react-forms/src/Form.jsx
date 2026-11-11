@@ -1,46 +1,71 @@
-import { useState } from 'react';
+import { useForm } from "react-hook-form";
+
 import './Form.css'
 
 function Form() {
-    const [FormData, setFormData] = useState({
-        firstname: "",
-        lastname: "",
-        email: "",
-        contact: "",
-        gender: "",
-        resume: null,
-        porfolio: "",
-        reason: ""
-    });
+    const {
+        register,
+        handleSubmit,
+        formState: { errors }
+    } = useForm();
 
-    const handleData = (evt) => {
-        const { name, value, type, files } = evt.target;
-
-        if (type === "file") {
-            const file = files[0];
-
-            if (file && file.size > 2 * 1024 * 1024) {
-                alert("File must be less than 2MB");
-                evt.target.value = "";
-                return;
+    const registerOptions = {
+        firstname: {
+            required: "This field is required."
+        },
+        lastname: {
+            required: "This field is required."
+        },
+        email: {
+            required: "This field is required.",
+            pattern: {
+                value: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
+                message: "Please enter a valid email."
             }
+        },
+        contact: {
+            required: "This field is required.",
+            minLength: {
+                value: 10,
+                message: "Contact must be 10 digits."
+            },
+            maxLength: {
+                value: 10,
+                message: "Contact must be 10 digits."
+            },
+            pattern: {
+                value: /^[0-9]+$/,
+                message: "Only numbers are allowed."
+            }
+        },
+        gender: {
+            required: "Please select one option."
+        },
+        resume: {
+            required: "Please upload a file.",
+            validate: (files) =>
+                !files?.[0] ||
+                files[0].size <= 2 * 1024 * 1024 ||
+                "File must be 2MB or less."
+        },
+        portfolio: {
+            required: "This field is required."
+        },
+        reason: {
+            required: "This field is required."
         }
+    };
 
-        setFormData(currentData => ({
-            ...currentData,
-            [name]: type === "file" ? files[0] ?? null : value
-        }))
-    }
-
-    const handleSubmit = (evt) => {
-        evt.preventDefault();
-        console.log(FormData);
-    }
+    const onSubmit = (data) => {
+        console.log(data);
+        console.log("Resume:", data.resume[0]);
+    };
 
     return (
         <div>
-            <form action="" onSubmit={handleSubmit}>
+            <form action="" onSubmit={handleSubmit(onSubmit)} no validate>
                 <h1>React Form</h1>
+
                 <div>
                     <h3>Full Name*</h3>
                     <div className="name-row">
@@ -50,9 +75,13 @@ function Form() {
                                 name="firstname"
                                 id="firstname"
                                 placeholder="Enter your firstname"
-                                onChange={handleData}
-                                required
+                                {
+                                ...register("firstname", registerOptions.firstname)
+                                }
                             />
+                            {errors.firstname && (
+                                <p className="error">{errors.firstname.message}</p>
+                            )}
                         </div>
 
                         <div className="name-field">
@@ -61,39 +90,87 @@ function Form() {
                                 name="lastname"
                                 id="lastname"
                                 placeholder="Enter your lastname"
-                                onChange={handleData}
-                                required
+                                {...register("lastname", registerOptions.lastname)}
                             />
+                            {errors.lastname && (
+                                <p className="error">{errors.lastname.message}</p>
+                            )}
                         </div>
                     </div>
                 </div>
+
                 <div>
                     <h3>Email*</h3>
-                    <input type="email" name="email" id="email" required onChange={handleData} />
+                    <input type="email"
+                        name="email"
+                        id="email"
+                        {...register("email", registerOptions.email)}
+                    />
+                    {errors.email && (
+                        <p className="error">{errors.email.message}</p>
+                    )}
                 </div>
                 <div>
                     <h3>Contact*</h3>
-                    <input type="tel" name="contact" id="contact" required onChange={handleData} />
+                    <input type="tel"
+                        name="contact"
+                        id="contact"
+
+                        {...register("contact", registerOptions.contact)}
+                    />
+                    {errors.contact && (
+                        <p className="error">{errors.contact.message}</p>
+                    )}
                 </div>
                 <div>
                     <h3>Gender</h3>
                     <div className="gender-row">
-                        <input type="radio" name="gender" id="male" value="Male" onChange={handleData} />
+                        <input type="radio"
+                            name="gender"
+                            id="male"
+                            value="Male"
+                            {...register("gender", registerOptions.gender)}
+                        />
                         <label htmlFor="male">Male</label>
 
-                        <input type="radio" name="gender" id="female" value="Female" onChange={handleData} />
+                        <input type="radio"
+                            name="gender"
+                            id="female"
+                            value="Female"
+                            {...register("gender", registerOptions.gender)}
+                        />
                         <label htmlFor="female">Female</label>
                     </div>
+                    {errors.gender && (
+                        <p className="error">{errors.gender.message}</p>
+                    )}
                 </div>
 
                 <div>
                     <h3>Upload your Resume*</h3>
-                    <input type="file" name="resume" id="resume" required onChange={handleData} />
+                    <input type="file"
+                        name="resume"
+                        id="resume"
+                        accept=".pdf.docx.docx"
+                        {...register("resume", registerOptions.resume)}
+                    />
+                    {errors.resume && (
+                        <p className="error">{errors.resume.message}</p>
+                    )}
                 </div>
+
                 <div>
                     <h3>Enter your porfolio URL*</h3>
-                    <input type="url" name="porfolio" id="porfolio" required onChange={handleData} />
+                    <input type="url"
+                        name="porfolio"
+                        id="porfolio"
+                        {...register("portfolio", registerOptions.portfolio)}
+                    />
+                    {errors.portfolio && (
+                        <p className="error">{errors.portfolio.message}</p>
+                    )}
                 </div>
+
                 <div>
                     <h3>Why are you applying for this role?*</h3>
                     <textarea
@@ -101,9 +178,11 @@ function Form() {
                         id="reason"
                         placeholder="Tell us why you're interested in this role..."
                         rows="4"
-                        required
-                        onChange={handleData}
+                        {...register("reason", registerOptions.reason)}
                     />
+                    {errors.reason && (
+                        <p className="error">{errors.reason.message}</p>
+                    )}
                 </div>
                 <div>
                     <button type='submit'>Submit</button>
